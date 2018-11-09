@@ -1,17 +1,29 @@
 import { combineReducers } from 'redux';
-import { RECEIVE_API_DATA } from './constant';
+import { RECEIVE_API_LIST, RECEIVE_API_RECORD } from './constant';
 
+const initialState = {
+  list: [],
+  record: []
+}
 /**
  * reducer
  *
  * @param {object} [state={}]
- * @param {object} { type, data }
+ * @param {object} action
  * @returns {object}
  */
-const data = (state = {}, { type, data }) => {
-  switch (type) {
-    case RECEIVE_API_DATA:
-      return data;
+const data = (state = initialState, action) => {
+  switch (action.type) {
+    case RECEIVE_API_LIST:
+      return {
+        ...state,
+        list: action.list
+      };
+    case RECEIVE_API_RECORD:
+      return {
+        ...state,
+        record: action.record
+      };
     default:
       return state;
   }

@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import { receiveApiData } from './action';
-import { REQUEST_API_DATA } from './constant';
+import { receiveApiList, receiveApiRecord } from './action';
+import { REQUEST_API_LIST, REQUEST_API_RECORD } from './constant';
 import { fetchData } from '../request';
 
 /**
@@ -10,11 +10,21 @@ import { fetchData } from '../request';
  *
  * @param {object} action
  */
-function* getApiData(action) {
+function* getApiList(action) {
   try {
     // do api call
-    const data = yield call(fetchData(action.endpoint));
-    yield put(receiveApiData(data));
+    const list = yield call(fetchData(action.endpoint));
+    yield put(receiveApiList(list.results));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* getApiRecord(action) {
+  try {
+    // do api call
+    const record = yield call(fetchData(action.propID));
+    yield put(receiveApiRecord(record.results));
   } catch (e) {
     console.log(e);
   }
@@ -28,5 +38,8 @@ function* getApiData(action) {
   and only the latest one will be run.
 */
 export default function* mySaga() {
-  yield takeLatest(REQUEST_API_DATA, getApiData);
+  yield [
+   takeLatest(REQUEST_API_LIST, getApiList),
+   takeLatest(REQUEST_API_RECORD, getApiRecord)
+  ]
 }
